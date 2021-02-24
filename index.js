@@ -1,4 +1,8 @@
+const { ApolloServer } = require("apollo-server");
 const mongoose = require("mongoose");
+const typeDefs = require("./gql/schema");
+const resolvers = require("./gql/resolver");
+
 require("dotenv").config({ path: ".env" });
 
 const connectDB = async () => {
@@ -15,5 +19,18 @@ const connectDB = async () => {
     console.log("La conexio a MongoDB fallo", err);
   }
 };
-
+const Server = async() =>{
+  try {
+    const ServerApollo = new ApolloServer({
+      typeDefs,
+      resolvers,
+    });
+    await ServerApollo.listen().then(({ url }) => {
+      console.log(`Servidor listo en la url ${url} `);
+    });
+  } catch (error) {
+    console.log("La conexio a servidor fallo", err);
+  }
+}
 connectDB();
+Server();
